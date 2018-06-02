@@ -1,31 +1,45 @@
 module Main exposing (..)
 
-import Combine exposing ((*>), (<*), Parser, between, many, manyTill, parse, regex, string, whitespace)
+import Combine exposing ((*>), (<*), Parser, between, many, manyTill, map, parse, regex, string, whitespace)
 
 
 parseTranscriptionXML : String -> Result String String
 parseTranscriptionXML transcription =
     case parse (many textWithoutWhitespace) transcription of
         Ok ( _, stream, result ) ->
-            Ok (toSentence result)
+            Ok (String.join "" result)
 
         Err ( _, stream, errors ) ->
             Err (String.join " or " errors)
 
 
-toSentence : List (List String) -> String
-toSentence list =
-    List.map (String.join "") list |> String.join ""
-
-
-textWithoutWhitespace : Parser state (List String)
+textWithoutWhitespace : Parser state String
 textWithoutWhitespace =
-    whitespace *> word <* whitespace
+    whitespace *> paragraph <* whitespace
 
 
-word : Parser state (List String)
+paragraph : Parser state String
+paragraph =
+    openingParagraphTag
+        *> manyTill word (string "</p>")
+        |> map (String.join "")
+
+
+openingParagraphTag : Parser state (List String)
+openingParagraphTag =
+    string "<p" *> manyTill anyCharacter (string ">")
+
+
+closingParagraphTag : Parser state String
+closingParagraphTag =
+    string "</p>"
+
+
+word : Parser state String
 word =
-    openingWordTag *> manyTill anyCharacter closingWordTag
+    openingWordTag
+        *> manyTill anyCharacter closingWordTag
+        |> map (String.join "")
 
 
 openingWordTag : Parser state (List String)
