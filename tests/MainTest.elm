@@ -14,7 +14,7 @@ suite =
                 \_ ->
                     let
                         transcription =
-                            " here"
+                            "<s t=\"1410\" ac=\"252\"> here</s>"
                     in
                     Expect.equal (Main.parseTranscriptionXML transcription) (Ok " here")
             ]
