@@ -9,7 +9,7 @@ suite : Test
 suite =
     describe "Parsing YouTube trascript markup"
         [ describe "Main.parseTranscriptionXML"
-            [ test "parses with head included" <|
+            [ test "parses auto-generated closed caption xml" <|
                 \_ ->
                     let
                         transcription =
@@ -36,5 +36,19 @@ suite =
                             """
                     in
                     Expect.equal (Main.parseTranscriptionXML transcription) (Ok "I'm just here to say what works for me because you know sometimes people come ")
+            , test "parses user generated closed caption xml" <|
+                \_ ->
+                    let
+                        transcription =
+                            """
+<?xml version="1.0" encoding="utf-8" ?><timedtext format="3">
+<body>
+<p t="12976" d="3364">- So, this was supposed to be replaced</p>
+<p t="16340" d="1870">by the title of the talk.</p>
+</body>
+</timedtext>
+"""
+                    in
+                    Expect.equal (Main.parseTranscriptionXML transcription) (Ok "So, this was supposed to be replaced by the title of the talk. ")
             ]
         ]
