@@ -43,7 +43,7 @@ suite =
                             """
 <?xml version="1.0" encoding="utf-8" ?><timedtext format="3">
 <body>
-<p t="12976" d="3364">- So, this was supposed to be replaced</p>
+<p t="12976" d="3364">So, this was supposed to be replaced</p>
 <p t="16340" d="1870">by the title of the talk.</p>
 </body>
 </timedtext>
