@@ -1,7 +1,7 @@
 module MainTest exposing (..)
 
 import Expect exposing (Expectation)
-import Main
+import Parser
 import Test exposing (..)
 
 
@@ -35,7 +35,7 @@ suite =
 </timedtext>
                             """
                     in
-                    Expect.equal (Main.parseTranscriptionXML transcription) (Ok "I'm just here to say what works for me because you know sometimes people come ")
+                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "I'm just here to say what works for me because you know sometimes people come ")
             , test "parses user generated closed caption xml" <|
                 \_ ->
                     let
@@ -49,6 +49,6 @@ suite =
 </timedtext>
 """
                     in
-                    Expect.equal (Main.parseTranscriptionXML transcription) (Ok "So, this was supposed to be replaced by the title of the talk. ")
+                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "So, this was supposed to be replaced by the title of the talk. ")
             ]
         ]
