@@ -55,16 +55,13 @@ paragraph =
         *> manyTill word (or emptyParagraph (string "</p>"))
         |> map (String.join "")
 
-
-emptyParagraph : Parser state String
-emptyParagraph =
-    string "\n</p>"
-
-
 openingParagraphTag : Parser state (List String)
 openingParagraphTag =
     string "<p" *> manyTill anyCharacter (string ">")
 
+emptyParagraph : Parser state String
+emptyParagraph =
+    string "\n</p>"
 
 closingParagraphTag : Parser state String
 closingParagraphTag =
