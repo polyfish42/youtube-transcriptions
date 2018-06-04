@@ -21,7 +21,7 @@ import Combine
 
 parseTranscriptionXML : String -> Result String String
 parseTranscriptionXML transcription =
-    case parse (many textWithoutWhitespace) transcription of
+    case parse (many paragraph) transcription of
         Ok ( _, stream, result ) ->
             Ok (joinResult result)
 
@@ -44,47 +44,38 @@ joinResult result =
             ""
 
 
-textWithoutWhitespace : Parser state String
-textWithoutWhitespace =
-    whitespace *> paragraph <* whitespace
-
-
 paragraph : Parser state String
 paragraph =
-    openingParagraphTag
-        *> manyTill word (or emptyParagraph (string "</p>"))
-        |> map (String.join "")
+    whitespace
+        *> openingTag "p"
+        *> (manyTill word (or emptyParagraph (closingTag "p"))
+                |> map (String.join "")
+           )
+        <* whitespace
 
-openingParagraphTag : Parser state (List String)
-openingParagraphTag =
-    string "<p" *> manyTill anyCharacter (string ">")
 
 emptyParagraph : Parser state String
 emptyParagraph =
     string "\n</p>"
 
-closingParagraphTag : Parser state String
-closingParagraphTag =
-    string "</p>"
-
 
 word : Parser state String
 word =
-    openingWordTag
-        *> manyTill anyCharacter closingWordTag
+    openingTag "s"
+        *> manyTill anyCharacter (closingTag "s")
         |> map (String.join "")
-
-
-openingWordTag : Parser state (List String)
-openingWordTag =
-    string "<s" *> manyTill anyCharacter (string ">")
-
-
-closingWordTag : Parser state String
-closingWordTag =
-    string "</s>"
 
 
 anyCharacter : Parser state String
 anyCharacter =
     regex "."
+
+
+openingTag : String -> Parser state (List String)
+openingTag name =
+    string ("<" ++ name) *> manyTill anyCharacter (string ">")
+
+
+closingTag : String -> Parser state String
+closingTag name =
+    string ("</" ++ name ++ ">")
