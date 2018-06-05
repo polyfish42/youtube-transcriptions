@@ -5,7 +5,8 @@ import Parser
 import Test exposing (..)
 
 
-seeResultOnly str =
+parseTranscriptionXMLTest : String -> List String
+parseTranscriptionXMLTest str =
     case Parser.parseTranscriptionXML str of
         Ok ( _, _, result ) ->
             List.map (\r -> r.content) result
@@ -44,7 +45,7 @@ suite =
 </timedtext>
                             """
                     in
-                    Expect.equal (seeResultOnly transcription)
+                    Expect.equal (parseTranscriptionXMLTest transcription)
                         [ "I'm just here to say what works for me"
                         , ""
                         , "because you know sometimes people come"
@@ -63,7 +64,7 @@ good title for this talk.&quot;</p>
 </timedtext>
 """
                     in
-                    Expect.equal (seeResultOnly transcription)
+                    Expect.equal (parseTranscriptionXMLTest transcription)
                         [ "\"Actually, FIXME is a good title for this talk.\"" ]
             ]
         ]
