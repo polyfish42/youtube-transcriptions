@@ -59,12 +59,13 @@ suite =
 <?xml version="1.0" encoding="utf-8" ?><timedtext format="3">
 <body>
 <p t="21120" d="1410">&quot;Actually, FIXME is a
-good title for this talk.&quot;</p>
+good title for this talk.&quot;
+</p>
 </body>
 </timedtext>
 """
                     in
                     Expect.equal (parseTranscriptionXMLTest transcription)
-                        [ "\"Actually, FIXME is a good title for this talk.\"" ]
+                        [ "\"Actually, FIXME is a good title for this talk.\" " ]
             ]
         ]
