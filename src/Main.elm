@@ -48,7 +48,7 @@ viewParsedTranscript : String -> Html Msg
 viewParsedTranscript transcriptionXML =
     case parseTranscriptionXML transcriptionXML of
         Ok (_, _, result) ->
-            p [] [text <| String.join "" <| List.map (\r -> r.content) result ] 
+            p [] [text <| String.join "\n" <| List.map (\r -> (toString r.time) ++ r.content) result ] 
 
         Err (_, _, message) ->
             p [] [text <| String.join "" message ]

@@ -5,6 +5,15 @@ import Parser
 import Test exposing (..)
 
 
+seeResultOnly str =
+    case Parser.parseTranscriptionXML str of
+        Ok ( _, _, result ) ->
+            List.map (\r -> r.content) result
+
+        Err ( _, _, message ) ->
+            message
+
+
 suite : Test
 suite =
     describe "Parsing YouTube trascript markup"
@@ -35,7 +44,12 @@ suite =
 </timedtext>
                             """
                     in
-                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "I'm just here to say what works for me because you know sometimes people come ")
+                    Expect.equal (seeResultOnly transcription)
+                        [ "I'm just here to say what works for me"
+                        , ""
+                        , "because you know sometimes people come"
+                        , ""
+                        ]
             , test "parses user generated closed caption xml" <|
                 \_ ->
                     let
@@ -49,6 +63,7 @@ good title for this talk.&quot;</p>
 </timedtext>
 """
                     in
-                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "\"Actually, FIXME is a good title for this talk.\" ")
+                    Expect.equal (seeResultOnly transcription)
+                        [ "\"Actually, FIXME is a good title for this talk.\"" ]
             ]
         ]
