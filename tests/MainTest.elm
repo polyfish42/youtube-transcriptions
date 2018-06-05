@@ -43,12 +43,12 @@ suite =
                             """
 <?xml version="1.0" encoding="utf-8" ?><timedtext format="3">
 <body>
-<p t="12976" d="3364">So, this was supposed to be replaced</p>
-<p t="16340" d="1870">by the title of the talk.</p>
+<p t="21120" d="1410">&quot;Actually, FIXME is a
+good title for this talk.&quot;</p>
 </body>
 </timedtext>
 """
                     in
-                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "So, this was supposed to be replaced by the title of the talk. ")
+                    Expect.equal (Parser.parseTranscriptionXML transcription) (Ok "\"Actually, FIXME is a good title for this talk.\" ")
             ]
         ]
