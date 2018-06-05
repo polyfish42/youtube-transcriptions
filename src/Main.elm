@@ -40,15 +40,19 @@ view : Model -> Html Msg
 view model =
     div []
         [ textarea [ onInput Change ] []
-        , viewParsedTranscript model.transrciptionXML
+        , div [] <| viewParsedTranscript model.transrciptionXML
         ]
 
 
-viewParsedTranscript : String -> Html Msg
+viewParsedTranscript : String -> List (Html Msg)
 viewParsedTranscript transcriptionXML =
     case parseTranscriptionXML transcriptionXML of
         Ok (_, _, result) ->
-            p [] [text <| String.join "\n" <| List.map (\r -> (toString r.time) ++ r.content) result ] 
+            List.map (\r -> p [] [text <| (viewTime r.time) ++ ": " ++ r.content]) result
 
         Err (_, _, message) ->
-            p [] [text <| String.join "" message ]
+            [p [] [text <| String.join "" message ]]
+
+viewTime : Int -> String
+viewTime time =
+    toString (time // 1000)
