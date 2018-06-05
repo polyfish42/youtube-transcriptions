@@ -17,7 +17,7 @@ parseTranscriptionXMLTest str =
 
 suite : Test
 suite =
-    describe "Parsing YouTube trascript markup"
+    describe "Parsing YouTube transcript markup"
         [ describe "Main.parseTranscriptionXML"
             [ test "parses auto-generated closed caption xml" <|
                 \_ ->
