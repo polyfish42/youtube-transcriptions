@@ -4,6 +4,8 @@ import Combine
     exposing
         ( (*>)
         , (<*)
+        , ParseErr
+        , ParseOk
         , Parser
         , andThen
         , between
@@ -27,20 +29,14 @@ type alias TranscriptLine =
     }
 
 
-parseTranscriptionXML : String -> Result String String
+parseTranscriptionXML : String -> Result (ParseErr ()) (ParseOk () (List TranscriptLine))
 parseTranscriptionXML transcription =
-    case parse transcriptionXML (noWhitespace transcription) of
-        Ok ( _, stream, result ) ->
-            Ok (joinResult <| List.map (\r -> r.content) result)
-
-        Err ( _, stream, errors ) ->
-            Err (String.join " or " errors)
+    parse transcriptionXML (noWhitespace transcription)
 
 
 noWhitespace : String -> String
 noWhitespace string =
     Regex.replace Regex.All (Regex.regex "\n") (\_ -> " ") string
-
 
 
 joinResult : List String -> String
@@ -50,8 +46,10 @@ joinResult result =
             case x of
                 "" ->
                     joinResult xs
+
                 _ ->
                     x ++ " " ++ joinResult xs
+
         [] ->
             ""
 
